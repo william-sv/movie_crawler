@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup as bs
 import time
 import re
 
+
 class Crawler:
     def __init__(self):
         self.host = 'www.zhuixinfan.com'
