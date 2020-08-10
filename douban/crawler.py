@@ -24,7 +24,7 @@ class Crawler:
             # 'Referer': 'https://movie.douban.com/tv/',
             'Accept-Encoding': 'gzip, deflate',
             'Connection': 'keep-alive',
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
         }
         self.s = requests.session()
 
@@ -37,25 +37,26 @@ class Crawler:
             'page_limit': '',
             'page_start': ''
         }
-        i = 0
+        i = 2080
         flag = True
         while flag:
             # url = 'https://movie.douban.com/j/search_subjects?type=tv&tag=日剧&sort=recommend&page_limit=20&page_start=' + str(i)
-            url = 'https://movie.douban.com/j/new_search_subjects?sort=R&range=0,10&tags=%E7%94%B5%E8%A7%86%E5%89%A7&start=' + str(i) + '&countries=%E6%97%A5%E6%9C%AC'
+            url = 'https://movie.douban.com/j/new_search_subjects?sort=&range=0,10&tags=%E7%94%B5%E8%A7%86%E5%89%A7&start=' + str(i) + '&countries=%E6%97%A5%E6%9C%AC'
             print(url)
             try:
-                r = self.s.get(url=url,headers=self.headers)
+                r = self.s.get(url=url,headers=self.headers,timeout=5)
                 result = r.json()
                 if 'data' not in result or len(result['data']) == 0:
                     flag = False
                 self.save_csv(result['data'])
                 time.sleep(15)
                 i += 20
+                self.s.get(url='https://movie.douban.com/subject/' + result['data'][0]['id'])
             except Exception as e:
                 print(e)
 
     def save_csv(self, data):
-        with open('./riju2.csv','a',encoding='utf-8') as f:
+        with open('./riju3.csv','a',encoding='utf-8') as f:
             wf = csv.writer(f)
             for item in data:
                 wf.writerow([item['id'],item['title'],item['rate']])
